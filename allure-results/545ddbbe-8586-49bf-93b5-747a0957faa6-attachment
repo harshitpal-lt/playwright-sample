@@ -1,0 +1,48 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Browse LambdaTest >> Verify Statement of Account - Filter by Date / Date Range / In Last / Older Than / Year-Quarter and Loader with Percentage
+- Location: /Users/saksharora/Documents/lambdatestPWtest/playwright-sample/playwright-test-ts/tests/test_1.spec.ts:5:7
+
+# Error details
+
+```
+Error: browserType.launch: Executable doesn't exist at /Users/saksharora/Library/Caches/ms-playwright/chromium-1161/chrome-mac/Chromium.app/Contents/MacOS/Chromium
+╔═════════════════════════════════════════════════════════════════════════╗
+║ Looks like Playwright Test or Playwright was just installed or updated. ║
+║ Please run the following command to download new browsers:              ║
+║                                                                         ║
+║     npx playwright install                                              ║
+║                                                                         ║
+║ <3 Playwright Team                                                      ║
+╚═════════════════════════════════════════════════════════════════════════╝
+```
+
+# Test source
+
+```ts
+   1 | import test from "../lambdatest-setup";
+   2 | import { expect } from "@playwright/test";
+   3 |
+   4 | test.describe("Browse LambdaTest", () => {
+>  5 |   test("Verify Statement of Account - Filter by Date / Date Range / In Last / Older Than / Year-Quarter and Loader with Percentage", async ({ page }) => {
+     |       ^ Error: browserType.launch: Executable doesn't exist at /Users/saksharora/Library/Caches/ms-playwright/chromium-1161/chrome-mac/Chromium.app/Contents/MacOS/Chromium
+   6 |     await page.goto('https://duckduckgo.com')
+   7 |     let element = await page.locator("[name=\"q\"]");
+   8 |     await element.click();
+   9 |     await element.type("LambdaTest");
+  10 |     await element.press("Enter");
+  11 |     const title = await page.title()
+  12 |
+  13 |     console.log("Page title:: ", title);
+  14 |     // Use the expect API for assertions provided by playwright
+  15 |     expect(title).toEqual(expect.stringContaining("LambdaTest"));
+  16 |   });
+  17 | });
+  18 |
+```

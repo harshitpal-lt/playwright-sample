@@ -2,7 +2,7 @@ import test from "../lambdatest-setup";
 import { expect } from "@playwright/test";
 
 test.describe("Browse LambdaTest", () => {
-  test("Search LambdaTest on DuckDuckGo", async ({ page }) => {
+  test("Verify Statement of Account - Filter by Date / Date Range / In Last / Older Than / Year-Quarter and Loader with Percentage", async ({ page }) => {
     await page.goto('https://duckduckgo.com')
     let element = await page.locator("[name=\"q\"]");
     await element.click();

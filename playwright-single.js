@@ -3,16 +3,19 @@ const {expect} = require("expect");
 const cp = require('child_process');
 const playwrightClientVersion = cp.execSync('npx playwright --version').toString().trim().split(' ')[1];
 
+const LT_USERNAME = 'saksharora';
+const  LT_ACCESS_KEY = 'LT_nAju0RkJ4DOBU1jYc6q8FbcPUJf712MvxYk1DUefWQhddGh';
+
 (async () => {
   const capabilities = {
     'browserName': 'Chrome', // Browsers allowed: `Chrome`, `MicrosoftEdge`, `pw-chromium`, `pw-firefox` and `pw-webkit`
     'browserVersion': 'latest',
     'LT:Options': {
       'platform': 'Windows 10',
-      'build': 'Playwright Single Build',
-      'name': 'Playwright Sample Test',
-      'user': process.env.LT_USERNAME,
-      'accessKey': process.env.LT_ACCESS_KEY,
+      'build': 'PW(runscript)',
+      'name': 'PW Run script test',
+      'user': LT_USERNAME,
+      'accessKey': LT_ACCESS_KEY,
       'network': true,
       'video': true,
       'console': true,
@@ -24,7 +27,7 @@ const playwrightClientVersion = cp.execSync('npx playwright --version').toString
   }
 
   const browser = await chromium.connect({
-    wsEndpoint: `wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`
+    wsEndpoint: `wss://stage-cdp.lambdatestinternal.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`
   })
 
   const page = await browser.newPage()

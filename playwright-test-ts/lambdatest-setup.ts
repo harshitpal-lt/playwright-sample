@@ -11,19 +11,25 @@ import { chromium } from "playwright";
 const capabilities = {
   browserName: "Chrome", // Browsers allowed: `Chrome`, `MicrosoftEdge`, `pw-chromium`, `pw-firefox` and `pw-webkit`
   browserVersion: "latest",
-  "LT:Options": {
-    platform: "Windows 10",
-    build: "Playwright TS Build",
-    name: "Playwright Test",
-    user: process.env.LT_USERNAME,
-    accessKey: process.env.LT_ACCESS_KEY,
-    network: true,
-    video: true,
-    console: true,
-    tunnel: false, // Add tunnel configuration if testing locally hosted webpage
-    tunnelName: "", // Optional
-    geoLocation: '', // country code can be fetched from https://www.lambdatest.com/capabilities-generator/
-  },
+  'LT:Options': {
+      'platform': 'Windows 11',
+      'build': 'debug',
+      'name': `Playwright Sample Test `,
+      'user': "saksharora",
+      'accessKey': "LT_xeKHXrS3VTgso1AAdhif9cfwLCLZpQDnxK9tyNqK65oC2eF",
+      'network': true,
+      'video': true,
+      'console': true,
+      // "geoLocation": "CA",
+      'infraProvider': "LW",
+      // 'fixed_ip': "10.130.22.201",
+      'fullHAR': true,
+      "tunnel": true,
+      "tunnelIdentifier": "CR_LT_TUNNEL",
+      'goog:chromeOptions': [
+        '--start-maximized',
+      ]
+    }
 };
 
 // Patching the capabilities dynamically according to the project name.
@@ -52,11 +58,11 @@ const test = base.test.extend({
         `${testInfo.title} - ${fileName}`
       );
 
-      const browser = await chromium.connect({
-        wsEndpoint: `wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(
+      const browser = await chromium.connect(
+        `wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(
           JSON.stringify(capabilities)
-        )}`,
-      });
+        )}`
+      );
 
       const ltPage = await browser.newPage(testInfo.project.use);
       await use(ltPage);

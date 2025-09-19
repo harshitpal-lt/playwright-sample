@@ -13,20 +13,26 @@ if (process.env.executeOn !== "local"){
 // LambdaTest capabilities
 const capabilities = {
   'browserName': 'Chrome', // Browsers allowed: `Chrome`, `MicrosoftEdge`, `pw-chromium`, `pw-firefox` and `pw-webkit`
-  'browserVersion': 'latest',
+  'browserVersion': '136',
   'LT:Options': {
-    'platform': 'Windows 10',
+    'platform': 'macOS Sonoma',
     'build': 'Playwright JS Build',
-    'name': 'Playwright Test',
-    'user': process.env.LT_USERNAME,
-    'accessKey': process.env.LT_ACCESS_KEY,
+    'name': 'Usercentrics 3 - WCGA21AA',
+    'user': 'harshitpal',
+    'accessKey': 'LT_rqigIg80MI6ddf3avzFTWV9pUrZNEYb7pt9QPcoo0sz2HyY',
     'network': true,
     'video': true,
     'console': true,
+    'accessibility': true,
+    "accessibility.captureScreenshotEnabled": true,
+    "accessibility.bestPractice": true,
+    "accessibility.needsReview": true,
+    "accessibility.wcagVersion": "wcag21aa",
     'tunnel': false, // Add tunnel configuration if testing locally hosted webpage
-    'tunnelName': '', // Optional
-    'geoLocation': '', // country code can be fetched from https://www.lambdatest.com/capabilities-generator/
-    'playwrightClientVersion': playwrightClientVersion
+    // 'tunnelName': '', // Optional
+    'geoLocation': 'IN', // country code can be fetched from https://www.lambdatest.com/capabilities-generator/
+    'playwrightClientVersion': playwrightClientVersion,
+    // "fixed_ip": "10.243.34.149",
   }
 }
 
@@ -74,8 +80,14 @@ exports.test = base.test.extend({
         ltPage = await context.newPage(testInfo.project.use);
       } else {
         // Desktop test
-        browser = await chromium.connect(`wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`)
+        // browser = await chromium.connect(`wss://cdp.lambdatest.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`)
+        browser = await chromium.connect(`wss://stage-cdp.lambdatestinternal.com/playwright?capabilities=${encodeURIComponent(JSON.stringify(capabilities))}`)
         ltPage = await browser.newPage(testInfo.project.use)
+        
+        // Enable accessibility extension for LambdaTest
+        await ltPage.goto("chrome://extensions/?id=johgkfjmgfeapgnbkmfkfkaholjbcnah");
+        const secondToggleButton = ltPage.locator('#crToggle').nth(0);
+        await secondToggleButton.click();
       }
 
       await use(ltPage)
@@ -89,7 +101,7 @@ exports.test = base.test.extend({
       }
       await ltPage.evaluate(() => {},
         `lambdatest_action: ${JSON.stringify(testStatus)}`)
-
+      
       await ltPage.close()
       await context?.close();
       await browser?.close()
@@ -99,42 +111,36 @@ exports.test = base.test.extend({
       await use(page)
     }
   },
-  beforeEach: [
-    async ({ page }, use) => {
-      await page
-        .context()
-        .tracing.start({ screenshots: true, snapshots: true, sources: true });
-      await use();
-    },
-    { auto: true },
-  ],
+  // beforeEach: [
+  //   async ({ page }, use) => {
+  //     await page
+  //       .context()
+  //       .tracing.start({ screenshots: true, snapshots: true, sources: true });
+  //     await use();
+  //   },
+  //   { auto: true },
+  // ],
 
-  afterEach: [
-    async ({ page }, use, testInfo) => {
-      await use();
-      if (testInfo.status == "failed") {
-        await page
-          .context()
-          .tracing.stop({ path: `${testInfo.outputDir}/trace.zip` });
-        await page.screenshot({ path: `${testInfo.outputDir}/screenshot.png` });
-        await testInfo.attach("screenshot", {
-          path: `${testInfo.outputDir}/screenshot.png`,
-          contentType: "image/png",
-        });
-        await testInfo.attach("trace", {
-          path: `${testInfo.outputDir}/trace.zip`,
-          contentType: "application/zip",
-        });
-      }
-    },
-    { auto: true },
-  ],
-});
-}else {
-  // Fallback to local if `executeOn` is not set to `lambdatest`
-  exports.test = base.test.extend({
-    page: async ({ page }, use) => {
-      await use(page); // Running locally
-    }
-  });
+//   afterEach: [
+//     async ({ page }, use, testInfo) => {
+//       await use();
+//       if (testInfo.status == "failed") {
+//         await page
+//           .context()
+//           .tracing.stop({ path: `${testInfo.outputDir}/trace.zip` });
+//         await page.screenshot({ path: `${testInfo.outputDir}/screenshot.png` });
+//         await testInfo.attach("screenshot", {
+//           path: `${testInfo.outputDir}/screenshot.png`,
+//           contentType: "image/png",
+//         });
+//         await testInfo.attach("trace", {
+//           path: `${testInfo.outputDir}/trace.zip`,
+//           contentType: "application/zip",
+//         });
+//       }
+//     },
+//     { auto: true },
+//   ],
+// });
+})
 }

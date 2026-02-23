@@ -1,0 +1,4 @@
+node_modules/
+npx
+npm
+playwright-test-suite@1.0.0
